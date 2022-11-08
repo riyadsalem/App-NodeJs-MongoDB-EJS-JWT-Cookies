@@ -39,16 +39,49 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // Routing Setup
-app.use("/", loginRouter);
+// app.use("/", loginRouter);
 // app.use("/users", usersRouter);
 // app.use("/inbox", inboxRouter);
 
 // Error Handling
 // 404 not found handler
-app.use(notFountHandler);
+//app.use(notFountHandler);
 
 // Common error handler
-app.use(errorHandler);
+//app.use(errorHandler);
+
+const firstMiddleware = (req, res, next) => {
+  console.log("this is first middlewares");
+  next();
+};
+
+const secondMiddleware = (req, res, next) => {
+  console.log("this is Second middlewares");
+  next();
+};
+
+const firstSecondMiddleware = [firstMiddleware, secondMiddleware];
+
+// app.use(firstMeddleware);
+// app.use(secondMiddleware);
+
+app.use(
+  (req, res, next) => {
+    console.log("this is first Middlewar");
+    next();
+  },
+  (req, res, next) => {
+    console.log("this is second middleware");
+    next();
+  }
+);
+
+app.get(
+  "/",
+  /*firstSecondMiddleware,*/ (req, res) => {
+    res.send("This is Home Page");
+  }
+);
 
 app.listen(process.env.PORT, () => {
   console.log(`App Listening to PORT ${process.env.PORT}`);

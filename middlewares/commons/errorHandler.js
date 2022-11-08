@@ -2,6 +2,7 @@ const createError = require("http-errors");
 
 // 404 not found handler
 function notFountHandler(req, res, next) {
+  // console.log("this is first meddleware");
   next(createError(404, "Your Requested content ws not found"));
 }
 
