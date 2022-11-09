@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 // Internal Imports
-const { getLogin } = require("../controller/loginController");
+const { getInbox } = require("../controller/inboxController");
 const decorateHtmlResponse = require("../middlewares/decorateHtmlResponse");
 
-//Login Page
-router.get("/", decorateHtmlResponse("Login"), getLogin);
+// Inbox Page
+router.get("/inbox", decorateHtmlResponse("Inbox"), getInbox);
 
 module.exports = router;
