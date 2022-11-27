@@ -1,6 +1,7 @@
 const { check, validationResult } = require("express-validator");
 const createError = require("http-errors");
 const path = require("path");
+const { unlink } = require("fs/promises");
 const User = require("../../models/People");
 
 const addUserValidators = [
@@ -49,4 +50,32 @@ const addUserValidators = [
     ),
 ];
 
-module.exports = { addUserValidators };
+const addUserValidationHandler = function (req, res, next) {
+  const errors = validationResult(req);
+  const mappedErrors = errors.mapped();
+
+  if (Object.keys(mappedErrors).length === 0) {
+    next();
+  } else {
+    // Remove Uploaded Files
+    if (req.files.length > 0) {
+      const { filename } = req.files[0];
+      unlink(
+        path.join(__dirname, `../public/uploads/avatars/${filename}`),
+        (err) => {
+          if (err) console.log(err);
+        }
+      );
+    }
+
+    // response the error
+    res.status(500).json({
+      errors: mappedErrors,
+    });
+  }
+};
+
+module.exports = {
+  addUserValidators,
+  addUserValidationHandler,
+};
