@@ -10,13 +10,37 @@ const {
   notFountHandler,
   errorHandler,
 } = require("./middlewares/commons/errorHandler");
+
 const loginRouter = require("./router/loginRouter");
 const usersRouter = require("./router/usersRouter");
 const inboxRouter = require("./router/inboxRouter");
 
 const app = express();
+dotenv.config({ path: "./secretDotEnv/.env" });
 
-dotenv.config();
+// Set View Engine
+app.set("view engine", "ejs");
+
+// request parsers
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
+// parse Cookies
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
+app.use("/", loginRouter);
+app.use("/users", usersRouter);
+app.use("/inbox", inboxRouter);
+
+// Error Handling
+// 404 not found handler
+app.use(notFountHandler);
+
+// Common error handler
+app.use(errorHandler);
 
 // Database Connection
 mongoose
@@ -26,31 +50,6 @@ mongoose
   })
   .then(() => console.log("Database Connection Successful"))
   .catch((error) => console.log(error));
-
-// request parsers
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Set View Engine
-app.set("view engine", "ejs");
-
-// Set static folder
-app.use(express.static(path.join(__dirname, "public")));
-
-// parse Cookies
-app.use(cookieParser(process.env.COOKIE_SECRET));
-
-// Routing Setup
-app.use("/", loginRouter);
-app.use(usersRouter);
-app.use(inboxRouter);
-
-// Error Handling
-// 404 not found handler
-app.use(notFountHandler);
-
-// Common error handler
-app.use(errorHandler);
 
 app.listen(process.env.PORT, () => {
   console.log(`App Listening to PORT ${process.env.PORT}`);
