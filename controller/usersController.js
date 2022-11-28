@@ -6,7 +6,9 @@ const path = require("path");
 const User = require("../models/People");
 
 // Get User From DataBase
-const getUsers = async (req, res, next) => {};
+const getUsers = async (req, res, next) => {
+  res.render("users");
+};
 
 // Add User in to DataBase
 async function addUser(req, res, next) {
