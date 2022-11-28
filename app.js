@@ -4,7 +4,16 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const fs = require("fs");
+
+// Internal Imports
+const {
+  notFountHandler,
+  errorHandler,
+} = require("./middlewares/commons/errorHandler");
+
+const loginRouter = require("./router/loginRouter");
+const usersRouter = require("./router/usersRouter");
+const inboxRouter = require("./router/inboxRouter");
 
 const app = express();
 dotenv.config({ path: "./secretDotEnv/.env" });
@@ -22,15 +31,9 @@ app.use(express.static(path.join(__dirname, "public")));
 // parse Cookies
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
-// Internal Imports
-const {
-  notFountHandler,
-  errorHandler,
-} = require("./middlewares/commons/errorHandler");
-
-fs.readdirSync("./router").map((router) => {
-  app.use("/", require(`./router/${router}`));
-});
+app.use("/", loginRouter);
+app.use("/users", usersRouter);
+app.use("/inbox", inboxRouter);
 
 // Error Handling
 // 404 not found handler
