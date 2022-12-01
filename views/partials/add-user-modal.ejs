@@ -32,6 +32,12 @@
   const modal = document.querySelector("#add-user-modal");
   const form = document.getElementById("add-user-form");
 
+  // Success Toast
+  const successToast = Toastify({
+    text: "User was addes successfully!",
+    duration: 1000,
+  });
+
   function closeModal() {
     modal.style.display = "none";
   }
@@ -42,6 +48,17 @@
   // Form submit handler
   form.onSubmit = async function (event) {
     event.preventDefault();
+
+    const errorPlaceholders = document.querySelectorAll("p.error");
+    for (let i = 0; i < errorPlaceholders.length; i++) {
+      errorPlaceholders[i].style.display = "none";
+    }
+    const inputErrors = document.querySelectorAll("input.error");
+    if (inputErrors.length > 0) {
+      for (let j = 0; j < inputErrors.length; j++) {
+        inputErrors[j].classList.remove("error");
+      }
+    }
 
     // for the form data
     const formData = new FormData(form);
@@ -63,6 +80,15 @@
         errorPlaceholder.style.display = "block";
       });
     } else {
+      // Success
+      successToast.showToast();
+      closeModal();
+      document.querySelector("p.error").style = "none";
+
+      // Reload this page after 1 sec
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
     }
   }; // end onsubmit function
 </script>
