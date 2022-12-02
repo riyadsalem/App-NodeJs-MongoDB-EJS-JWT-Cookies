@@ -7,7 +7,14 @@ const User = require("../models/People");
 
 // Get User From DataBase
 const getUsers = async (req, res, next) => {
-  res.render("users");
+  try {
+    const users = await User.find();
+    res.render("users", {
+      users: users,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 /// Add User in to database
