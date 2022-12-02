@@ -1,5 +1,6 @@
 // External Imports
 const bcrypt = require("bcrypt");
+const { unlink } = require("fs");
 const path = require("path");
 
 // Internal Imposrts
@@ -52,4 +53,37 @@ async function addUser(req, res, next) {
     });
   }
 }
-module.exports = { getUsers, addUser };
+
+// Remove User
+
+async function removeUser(req, res, next) {
+  try {
+    const user = await User.findByIdAndDelete({
+      _id: req.param.id,
+    });
+
+    // remove user avatar
+    if (user.avatar) {
+      unlink(
+        path.join(__dirname, `/../public/uploads/avatars/${user.avatar}`),
+        (err) => {
+          if (err) console.log(err);
+        }
+      );
+    }
+
+    res.status(200).json({
+      message: "User removed successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      errors: {
+        common: {
+          msg: "Could not delete the user",
+        },
+      },
+    });
+  }
+}
+
+module.exports = { getUsers, addUser, removeUser };
