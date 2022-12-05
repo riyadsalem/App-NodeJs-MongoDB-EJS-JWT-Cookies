@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Internal Imports
-const { getLogin, login } = require("../controller/loginController");
+const { getLogin, login, logout } = require("../controller/loginController");
 const decorateHtmlResponse = require("../middlewares/decorateHtmlResponse");
 const {
   doLoginValidators,
@@ -21,5 +21,8 @@ router.post(
   doLoginValidationHandler,
   login
 );
+
+// Logout User
+router.delete("/", logout);
 
 module.exports = router;
