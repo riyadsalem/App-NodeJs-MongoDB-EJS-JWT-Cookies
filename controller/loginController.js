@@ -34,10 +34,37 @@ async function login(req, res, next) {
         };
 
         // Generate Token
+        const token = jwt.sign(userObject, process.env.JWT_SECRET, {
+          expireshIn: process.env.JWT_EXPIRY,
+        });
+
+        // SET Cookie
+        res.cookie(process.env.COOKIE_NAME, token, {
+          maxAge: process.env.JWT_EXPIRY,
+          httpOnly: true,
+          signed: true,
+        });
+
+        // SET Logged in user local IDENTIFIER
+        res.local.loggedInUser = userObject;
+        res.render("inbox");
+      } else {
+        throw createError("Login Failed please try again");
       }
+    } else {
+      throw createError("Login Failed please try again");
     }
   } catch (err) {
-    console.log(err);
+    res.render("index", {
+      data: {
+        username: req.body.username,
+      },
+      errors: {
+        common: {
+          msg: err.message,
+        },
+      },
+    });
   }
 }
 
