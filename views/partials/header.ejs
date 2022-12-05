@@ -31,12 +31,10 @@
         duration: 1000,
       });
 
-      async function logout() {
-        await fetch("/", {
+      function logout() {
+        fetch("/", {
           method: "DELETE",
-        });
-
-        logoutToast.showToast();
+        }).then(() => logoutToast.showToast());
 
         setTimeout(() => {
           window.location.replace("/");

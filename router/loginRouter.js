@@ -4,6 +4,7 @@ const router = express.Router();
 // Internal Imports
 const { getLogin, login, logout } = require("../controller/loginController");
 const decorateHtmlResponse = require("../middlewares/decorateHtmlResponse");
+const { redirectLoggedIn } = require("../middlewares/commons/checkLogin");
 const {
   doLoginValidators,
   doLoginValidationHandler,
@@ -13,7 +14,7 @@ const {
 const page_title = "login";
 
 //Login Page
-router.get("/", decorateHtmlResponse(page_title), getLogin);
+router.get("/", decorateHtmlResponse(page_title), redirectLoggedIn, getLogin);
 router.post(
   "/",
   decorateHtmlResponse(page_title),
