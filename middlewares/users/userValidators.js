@@ -28,7 +28,7 @@ const addUserValidators = [
     }),
 
   check("mobile")
-    .isMobilePhone("bn-BD", {
+    .isMobilePhone("ar-PS", {
       strictMode: true,
     })
     .withMessage("Mobile number must be a valid Country mobile number")
